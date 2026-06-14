@@ -1,186 +1,45 @@
 ---
 import Layout from '../layouts/Layout.astro';
-import { getCollection, render } from 'astro:content';
+import Sidebar from '../components/Sidebar.astro';
+import NicheCard from '../components/NicheCard.astro';
+import Footer from '../components/Footer.astro';
+import { getCollection } from 'astro:content';
 
-const niches = await getCollection('niches');
-const sortedNiches = niches.sort((a, b) => (a.data.order ?? 99) - (b.data.order ?? 99));
-
-const renderedNiches = await Promise.all(
-  sortedNiches.map(async (niche) => {
-    const { Content } = await render(niche);
-    return { ...niche, Content };
-  })
-);
+const niches = (await getCollection('niches'))
+  .sort((a, b) => (a.data.order ?? 99) - (b.data.order ?? 99));
 ---
 
-<Layout title="起号指南 - 各赛道起号逻辑与运营策略">
+<Layout title="起号指南 - 各赛道起号逻辑与运营策略" description="汇集各赛道起号核心逻辑，包含定位策略、内容规划、涨粉技巧和变现路径。覆盖数码、科技、AI、摄影、生活方式、知识付费等16个赛道。" lang="zh">
   <div class="flex min-h-screen">
-    <!-- Sidebar -->
-    <aside class="fixed left-0 top-0 h-screen w-64 border-r border-[var(--color-border)] bg-[var(--color-bg-secondary)] flex flex-col z-10 -translate-x-full lg:translate-x-0 transition-transform">
-      <!-- Logo -->
-      <div class="p-6 border-b border-[var(--color-border)]">
-        <h1 class="text-xl font-bold bg-gradient-to-r from-purple-500 to-blue-500 bg-clip-text text-transparent">
-          起号指南
-        </h1>
-        <p class="text-xs text-[var(--color-text-secondary)] mt-1">各赛道起号逻辑与运营策略</p>
-      </div>
+    <Sidebar niches={niches} lang="zh" />
 
-      <!-- Navigation -->
-      <nav class="flex-1 overflow-y-auto p-4 space-y-1">
-        {renderedNiches.map((niche) => (
-          <a
-            href={`#${niche.id}`}
-            class="sidebar-link flex items-center gap-3 px-4 py-3 rounded-lg border border-transparent text-sm cursor-pointer"
-            data-niche={niche.id}
-          >
-            <span class="text-lg">{niche.data.icon}</span>
-            <span class="text-[var(--color-text-primary)]">{niche.data.title}</span>
-          </a>
-        ))}
-      </nav>
-
-      <!-- Footer -->
-      <div class="p-4 border-t border-[var(--color-border)]">
-        <p class="text-xs text-[var(--color-text-secondary)] text-center">
-          持续更新中...
+    <main class="lg:ml-64 flex-1 min-h-screen">
+      <section class="max-w-5xl mx-auto px-6 lg:px-8 py-16 lg:py-24">
+        <h2 class="text-3xl lg:text-4xl font-bold text-[var(--color-text-primary)] mb-4">从零到一的起号方法论</h2>
+        <p class="text-lg text-[var(--color-text-secondary)] max-w-2xl mb-6">
+          汇集各赛道起号核心逻辑，包含定位策略、内容规划、涨粉技巧和变现路径。选择你感兴趣的赛道，开始你的内容创作之旅。
         </p>
-      </div>
-    </aside>
-
-    <!-- Mobile Header -->
-    <div class="lg:hidden fixed top-0 left-0 right-0 z-20 bg-[var(--color-bg-secondary)] border-b border-[var(--color-border)] p-4 flex items-center justify-between">
-      <h1 class="text-lg font-bold bg-gradient-to-r from-purple-500 to-blue-500 bg-clip-text text-transparent">
-        起号指南
-      </h1>
-      <button id="menu-toggle" class="text-[var(--color-text-secondary)] hover:text-[var(--color-text-primary)]">
-        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16" />
-        </svg>
-      </button>
-    </div>
-
-    <!-- Mobile Overlay -->
-    <div id="mobile-overlay" class="hidden fixed inset-0 bg-black/50 z-10 lg:hidden"></div>
-
-    <!-- Main Content -->
-    <main class="ml-64 flex-1 min-h-screen">
-      <!-- Hero Section -->
-      <section class="relative overflow-hidden border-b border-[var(--color-border)]">
-        <div class="absolute inset-0 bg-gradient-to-br from-purple-900/20 via-transparent to-blue-900/20"></div>
-        <div class="relative max-w-4xl mx-auto px-8 py-16">
-          <h2 class="text-4xl font-bold mb-4 bg-gradient-to-r from-purple-400 via-pink-400 to-blue-400 bg-clip-text text-transparent">
-            从零到一的起号方法论
-          </h2>
-          <p class="text-lg text-[var(--color-text-secondary)] max-w-2xl">
-            汇集各赛道起号核心逻辑，包含定位策略、内容规划、涨粉技巧和变现路径。
-            选择你感兴趣的赛道，开始你的内容创作之旅。
-          </p>
-          <div class="flex gap-3 mt-6">
-            <div class="px-3 py-1 rounded-full bg-[var(--color-bg-card)] border border-[var(--color-border)] text-xs text-[var(--color-text-secondary)]">
-              {sortedNiches.length} 个赛道
-            </div>
-            <div class="px-3 py-1 rounded-full bg-[var(--color-bg-card)] border border-[var(--color-border)] text-xs text-[var(--color-text-secondary)]">
-              实战验证
-            </div>
-            <div class="px-3 py-1 rounded-full bg-[var(--color-bg-card)] border border-[var(--color-border)] text-xs text-[var(--color-text-secondary)]">
-              持续更新
-            </div>
-          </div>
+        <div class="flex flex-wrap gap-3">
+          <span class="px-3 py-1 rounded-full bg-[var(--color-accent-subtle)] text-[var(--color-accent)] text-xs font-medium">{niches.length} 个赛道</span>
+          <span class="px-3 py-1 rounded-full bg-[var(--color-accent-subtle)] text-[var(--color-accent)] text-xs font-medium">实战验证</span>
+          <span class="px-3 py-1 rounded-full bg-[var(--color-accent-subtle)] text-[var(--color-accent)] text-xs font-medium">持续更新</span>
         </div>
       </section>
 
-      <!-- Ad Banner -->
-      <div class="max-w-4xl mx-auto px-8 py-6">
-        <ins class="adsbygoogle"
-             style="display:block"
-             data-ad-client="ca-pub-6979809011861753"
-             data-ad-slot="auto"
-             data-ad-format="horizontal"
-             data-full-width-responsive="true"></ins>
-        <script>
-          (adsbygoogle = window.adsbygoogle || []).push({});
-        </script>
+      <div class="max-w-5xl mx-auto px-6 lg:px-8 pb-6">
+        <ins class="adsbygoogle" style="display:block" data-ad-client="ca-pub-6979809011861753" data-ad-slot="auto" data-ad-format="horizontal" data-full-width-responsive="true"></ins>
+        <script>(adsbygoogle = window.adsbygoogle || []).push({});</script>
       </div>
 
-      <!-- Niche Sections -->
-      {renderedNiches.map((niche, index) => (
-        <>
-          <section id={niche.id} class="niche-section border-b border-[var(--color-border)] scroll-mt-16">
-            <div class="max-w-4xl mx-auto px-8 py-12">
-              <div class="flex items-center gap-3 mb-8">
-                <span class="text-3xl">{niche.data.icon}</span>
-                <h2 class="text-2xl font-bold">{niche.data.title}</h2>
-              </div>
-              <article class="prose max-w-none">
-                <niche.Content />
-              </article>
-            </div>
-          </section>
-          {(index + 1) % 3 === 0 && index < renderedNiches.length - 1 && (
-            <div class="max-w-4xl mx-auto px-8 py-4">
-              <ins class="adsbygoogle"
-                   style="display:block"
-                   data-ad-client="ca-pub-6979809011861753"
-                   data-ad-slot="auto"
-                   data-ad-format="auto"
-                   data-full-width-responsive="true"></ins>
-              <script>
-                (adsbygoogle = window.adsbygoogle || []).push({});
-              </script>
-            </div>
-          )}
-        </>
-      ))}
+      <section class="max-w-5xl mx-auto px-6 lg:px-8 pb-16">
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+          {niches.map((niche) => (
+            <NicheCard title={niche.data.title} icon={niche.data.icon} description={niche.data.description} slug={niche.id} lang="zh" />
+          ))}
+        </div>
+      </section>
 
-      <!-- Footer -->
-      <footer class="max-w-4xl mx-auto px-8 py-12 text-center">
-        <p class="text-sm text-[var(--color-text-secondary)]">
-          © 2025 起号指南 · 持续更新各赛道运营方法论
-        </p>
-      </footer>
+      <Footer lang="zh" />
     </main>
   </div>
-
-  <script>
-    const menuToggle = document.getElementById('menu-toggle');
-    const sidebar = document.querySelector('aside');
-    const overlay = document.getElementById('mobile-overlay');
-
-    menuToggle?.addEventListener('click', () => {
-      sidebar?.classList.toggle('-translate-x-full');
-      overlay?.classList.toggle('hidden');
-    });
-
-    overlay?.addEventListener('click', () => {
-      sidebar?.classList.add('-translate-x-full');
-      overlay?.classList.add('hidden');
-    });
-
-    document.querySelectorAll('.sidebar-link').forEach((link) => {
-      link.addEventListener('click', () => {
-        if (window.innerWidth < 1024) {
-          sidebar?.classList.add('-translate-x-full');
-          overlay?.classList.add('hidden');
-        }
-      });
-    });
-
-    const observer = new IntersectionObserver(
-      (entries) => {
-        entries.forEach((entry) => {
-          if (entry.isIntersecting) {
-            const id = entry.target.id;
-            document.querySelectorAll('.sidebar-link').forEach((link) => {
-              link.classList.toggle('active', link.getAttribute('data-niche') === id);
-            });
-          }
-        });
-      },
-      { rootMargin: '-20% 0px -80% 0px' }
-    );
-
-    document.querySelectorAll('.niche-section').forEach((section) => {
-      observer.observe(section);
-    });
-  </script>
 </Layout>

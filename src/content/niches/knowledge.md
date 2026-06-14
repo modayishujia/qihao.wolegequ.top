@@ -1,6 +1,7 @@
 ---
 title: "知识付费"
 icon: "📚"
+description: "付费课程、付费社群、咨询服务等知识变现方法"
 order: 6
 ---
 

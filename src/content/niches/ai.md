@@ -1,6 +1,7 @@
 ---
 title: "AI 赛道"
 icon: "🤖"
+description: "AI工具使用、AI绘画、AI写作、AI编程等细分领域起号策略"
 order: 3
 ---
 

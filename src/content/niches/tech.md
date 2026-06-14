@@ -1,6 +1,7 @@
 ---
 title: "科技赛道"
 icon: "💻"
+description: "软件硬件、互联网产品、科技资讯与技术教程"
 order: 2
 ---
 

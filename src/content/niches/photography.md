@@ -1,6 +1,7 @@
 ---
 title: "摄影赛道"
 icon: "📷"
+description: "人像、风光、美食、街拍摄影技巧与后期教程"
 order: 4
 ---
 

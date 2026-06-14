@@ -1,0 +1,50 @@
+---
+import Layout from '../layouts/Layout.astro';
+import Sidebar from '../components/Sidebar.astro';
+import Footer from '../components/Footer.astro';
+import { getCollection, render } from 'astro:content';
+
+export async function getStaticPaths() {
+  const niches = await getCollection('niches');
+  return niches.map((niche) => ({
+    params: { slug: niche.id },
+    props: { niche },
+  }));
+}
+
+const { niche } = Astro.props;
+const { Content } = await render(niche);
+const allNiches = (await getCollection('niches'))
+  .sort((a, b) => (a.data.order ?? 99) - (b.data.order ?? 99));
+
+const title = `${niche.data.title} - 起号指南`;
+const description = niche.data.description || `${niche.data.title}赛道起号指南：定位策略、内容规划、涨粉技巧和变现路径。`;
+---
+
+<Layout title={title} description={description} lang="zh" type="article">
+  <div class="flex min-h-screen">
+    <Sidebar niches={allNiches} currentSlug={niche.id} lang="zh" />
+
+    <main class="lg:ml-64 flex-1 min-h-screen">
+      <div class="max-w-4xl mx-auto px-6 lg:px-8 py-12 lg:py-16">
+        <a href="/" class="inline-flex items-center gap-1 text-sm text-[var(--color-text-secondary)] hover:text-[var(--color-accent)] transition-colors mb-8">
+          ← 返回首页
+        </a>
+        <div class="flex items-center gap-3 mb-8">
+          <span class="text-3xl">{niche.data.icon}</span>
+          <h1 class="text-2xl lg:text-3xl font-bold text-[var(--color-text-primary)]">{niche.data.title}</h1>
+        </div>
+        <article class="prose max-w-none">
+          <Content />
+        </article>
+      </div>
+
+      <div class="max-w-4xl mx-auto px-6 lg:px-8 py-6">
+        <ins class="adsbygoogle" style="display:block" data-ad-client="ca-pub-6979809011861753" data-ad-slot="auto" data-ad-format="auto" data-full-width-responsive="true"></ins>
+        <script>(adsbygoogle = window.adsbygoogle || []).push({});</script>
+      </div>
+
+      <Footer lang="zh" />
+    </main>
+  </div>
+</Layout>

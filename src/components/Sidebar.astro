@@ -1,0 +1,90 @@
+---
+import ThemeToggle from './ThemeToggle.astro';
+import LangToggle from './LangToggle.astro';
+
+interface Props {
+  niches: Array<{ id: string; data: { title: string; icon: string; order?: number } }>;
+  currentSlug?: string | null;
+  lang?: 'zh' | 'en';
+}
+
+const { niches, currentSlug = null, lang = 'zh' } = Astro.props;
+const homeHref = lang === 'en' ? '/en/' : '/';
+---
+
+<aside class="fixed left-0 top-0 h-screen w-64 border-r border-[var(--color-border)] bg-[var(--color-sidebar-bg)] flex flex-col z-30 -translate-x-full lg:translate-x-0 transition-transform duration-200">
+  <div class="p-6 border-b border-[var(--color-border)]">
+    <a href={homeHref} class="block">
+      <h1 class="text-xl font-bold text-[var(--color-text-primary)]">
+        {lang === 'zh' ? '起号指南' : 'Account Growth Guide'}
+      </h1>
+      <p class="text-xs text-[var(--color-text-secondary)] mt-1">
+        {lang === 'zh' ? '各赛道起号逻辑与运营策略' : 'Niche strategies & growth tactics'}
+      </p>
+    </a>
+  </div>
+
+  <nav class="flex-1 overflow-y-auto p-4 space-y-1">
+    <a href={homeHref} class:list={['sidebar-link flex items-center gap-3 px-4 py-3 rounded-lg border border-transparent text-sm', { active: currentSlug === null }]}>
+      <span class="text-lg">🏠</span>
+      <span>{lang === 'zh' ? '首页' : 'Home'}</span>
+    </a>
+    {niches.map((niche) => (
+      <a
+        href={lang === 'en' ? `/en/${niche.id}` : `/${niche.id}`}
+        class:list={['sidebar-link flex items-center gap-3 px-4 py-3 rounded-lg border border-transparent text-sm', { active: currentSlug === niche.id }]}
+      >
+        <span class="text-lg">{niche.data.icon}</span>
+        <span>{niche.data.title}</span>
+      </a>
+    ))}
+  </nav>
+
+  <div class="p-4 border-t border-[var(--color-border)] space-y-2">
+    <div class="flex items-center justify-between">
+      <ThemeToggle />
+      <LangToggle lang={lang} currentSlug={currentSlug} />
+    </div>
+    <p class="text-xs text-[var(--color-text-tertiary)] text-center">
+      {lang === 'zh' ? '持续更新中...' : 'Updated weekly...'}
+    </p>
+  </div>
+</aside>
+
+<div id="mobile-overlay" class="hidden fixed inset-0 bg-black/40 z-20 lg:hidden"></div>
+
+<div class="lg:hidden fixed top-0 left-0 right-0 z-10 bg-[var(--color-bg-primary)] border-b border-[var(--color-border)] p-4 flex items-center justify-between">
+  <a href={homeHref} class="text-lg font-bold text-[var(--color-text-primary)]">
+    {lang === 'zh' ? '起号指南' : 'Account Growth Guide'}
+  </a>
+  <button id="menu-toggle" class="text-[var(--color-text-secondary)] hover:text-[var(--color-text-primary)]">
+    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16" />
+    </svg>
+  </button>
+</div>
+
+<script>
+  const menuToggle = document.getElementById('menu-toggle');
+  const sidebar = document.querySelector('aside');
+  const overlay = document.getElementById('mobile-overlay');
+
+  menuToggle?.addEventListener('click', () => {
+    sidebar?.classList.toggle('-translate-x-full');
+    overlay?.classList.toggle('hidden');
+  });
+
+  overlay?.addEventListener('click', () => {
+    sidebar?.classList.add('-translate-x-full');
+    overlay?.classList.add('hidden');
+  });
+
+  document.querySelectorAll('.sidebar-link').forEach((link) => {
+    link.addEventListener('click', () => {
+      if (window.innerWidth < 1024) {
+        sidebar?.classList.add('-translate-x-full');
+        overlay?.classList.add('hidden');
+      }
+    });
+  });
+</script>
