@@ -4,11 +4,17 @@ interface Props {
   icon: string;
   description?: string;
   slug: string;
-  lang?: 'zh' | 'en';
+  lang?: string;
 }
 
 const { title, icon, description, slug, lang = 'zh' } = Astro.props;
-const href = lang === 'en' ? `/en/${slug}` : `/${slug}`;
+const href = lang === 'zh' ? `/${slug}` : `/${lang}/${slug}`;
+
+const viewTexts: Record<string, string> = {
+  zh: '查看详情', en: 'View details', ja: '詳細を見る',
+  de: 'Details', pt: 'Ver detalhes', fr: 'Voir les détails',
+};
+const viewText = viewTexts[lang] || viewTexts.zh;
 ---
 
 <a href={href} class="group block p-6 rounded-xl border border-[var(--color-border)] bg-[var(--color-bg-card)] hover:border-[var(--color-border-hover)] hover:shadow-lg hover:-translate-y-0.5 transition-all duration-200">
@@ -16,7 +22,7 @@ const href = lang === 'en' ? `/en/${slug}` : `/${slug}`;
   <h3 class="text-lg font-semibold text-[var(--color-text-primary)] mb-1 group-hover:text-[var(--color-accent)] transition-colors">{title}</h3>
   {description && <p class="text-sm text-[var(--color-text-secondary)] line-clamp-2">{description}</p>}
   <div class="mt-4 text-xs text-[var(--color-text-tertiary)] flex items-center gap-1 group-hover:text-[var(--color-accent)] transition-colors">
-    {lang === 'zh' ? '查看详情' : 'View details'}
+    {viewText}
     <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M9 5l7 7-7 7"/></svg>
   </div>
 </a>

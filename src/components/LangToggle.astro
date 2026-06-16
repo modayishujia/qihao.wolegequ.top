@@ -1,23 +1,74 @@
 ---
 interface Props {
-  lang: 'zh' | 'en';
+  lang: string;
   currentSlug?: string | null;
 }
 
 const { lang, currentSlug = null } = Astro.props;
-const targetLang = lang === 'zh' ? 'en' : 'zh';
-let href = targetLang === 'en' ? '/en/' : '/';
-if (currentSlug) {
-  href = targetLang === 'en' ? `/en/${currentSlug}` : `/${currentSlug}`;
+
+const languages = [
+  { code: 'zh', label: '中文', flag: '🇨🇳' },
+  { code: 'en', label: 'English', flag: '🇺🇸' },
+  { code: 'ja', label: '日本語', flag: '🇯🇵' },
+  { code: 'de', label: 'Deutsch', flag: '🇩🇪' },
+  { code: 'pt', label: 'Português', flag: '🇧🇷' },
+  { code: 'fr', label: 'Français', flag: '🇫🇷' },
+];
+
+function getHref(targetLang: string): string {
+  if (targetLang === 'zh') return currentSlug ? `/${currentSlug}` : '/';
+  return currentSlug ? `/${targetLang}/${currentSlug}` : `/${targetLang}/`;
 }
+
+const currentLang = languages.find(l => l.code === lang) || languages[0];
 ---
 
-<a
-  href={href}
-  class="flex items-center gap-2 px-3 py-2 rounded-lg text-sm text-[var(--color-text-secondary)] hover:text-[var(--color-text-primary)] hover:bg-[var(--color-bg-hover)] transition-colors"
->
-  <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-    <circle cx="12" cy="12" r="10"/><path d="M2 12h20M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/>
-  </svg>
-  <span>{lang === 'zh' ? 'EN' : '中文'}</span>
-</a>
+<div class="relative" id="lang-dropdown-wrapper">
+  <button
+    id="lang-toggle-btn"
+    class="flex items-center gap-2 px-3 py-2 rounded-lg text-sm text-[var(--color-text-secondary)] hover:text-[var(--color-text-primary)] hover:bg-[var(--color-bg-hover)] transition-colors cursor-pointer"
+  >
+    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+      <circle cx="12" cy="12" r="10"/><path d="M2 12h20M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/>
+    </svg>
+    <span>{currentLang.flag} {currentLang.label}</span>
+    <svg class="w-3 h-3 transition-transform" id="lang-arrow" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M19 9l-7 7-7-7"/></svg>
+  </button>
+
+  <div
+    id="lang-dropdown"
+    class="hidden absolute bottom-full left-0 mb-1 w-44 rounded-lg border border-[var(--color-border)] bg-[var(--color-bg-card)] shadow-lg z-50 py-1"
+  >
+    {languages.map((l) => (
+      <a
+        href={getHref(l.code)}
+        class:list={[
+          'flex items-center gap-2 px-3 py-2 text-sm transition-colors',
+          l.code === lang
+            ? 'text-[var(--color-accent)] bg-[var(--color-accent-subtle)] font-medium'
+            : 'text-[var(--color-text-secondary)] hover:text-[var(--color-text-primary)] hover:bg-[var(--color-bg-hover)]',
+        ]}
+      >
+        <span>{l.flag}</span>
+        <span>{l.label}</span>
+      </a>
+    ))}
+  </div>
+</div>
+
+<script>
+  const btn = document.getElementById('lang-toggle-btn');
+  const dropdown = document.getElementById('lang-dropdown');
+  const arrow = document.getElementById('lang-arrow');
+
+  btn?.addEventListener('click', (e) => {
+    e.stopPropagation();
+    dropdown?.classList.toggle('hidden');
+    arrow?.classList.toggle('rotate-180');
+  });
+
+  document.addEventListener('click', () => {
+    dropdown?.classList.add('hidden');
+    arrow?.classList.remove('rotate-180');
+  });
+</script>

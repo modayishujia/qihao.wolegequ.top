@@ -5,7 +5,7 @@ import SEOHead from '../components/SEOHead.astro';
 interface Props {
   title: string;
   description: string;
-  lang?: 'zh' | 'en';
+  lang?: string;
   canonical?: string;
   type?: 'website' | 'article';
 }
@@ -14,7 +14,7 @@ const { title, description, lang = 'zh', canonical, type } = Astro.props;
 ---
 
 <!doctype html>
-<html lang={lang === 'zh' ? 'zh-CN' : 'en'} class:list={[{ dark: false }]}>
+<html lang={lang === 'zh' ? 'zh-CN' : lang} class:list={[{ dark: false }]}>
   <head>
     <SEOHead title={title} description={description} lang={lang} canonical={canonical} type={type} />
     <script is:inline>
@@ -22,6 +22,33 @@ const { title, description, lang = 'zh', canonical, type } = Astro.props;
       if (theme === 'dark' || (!theme && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
         document.documentElement.classList.add('dark');
       }
+    </script>
+    <script is:inline>
+      (function() {
+        var path = window.location.pathname;
+        var langPrefixes = ['en', 'ja', 'de', 'pt', 'fr'];
+        var isLangPage = langPrefixes.some(function(p) {
+          return path === '/' + p + '/' || path.startsWith('/' + p + '/');
+        });
+        if (isLangPage) return;
+        if (sessionStorage.getItem('lang_redirect_done')) return;
+
+        var saved = localStorage.getItem('preferred_lang');
+        if (saved && saved !== 'zh' && langPrefixes.indexOf(saved) !== -1) {
+          sessionStorage.setItem('lang_redirect_done', '1');
+          var target = saved + '/' + path;
+          window.location.replace('/' + target);
+          return;
+        }
+
+        var browserLang = (navigator.language || navigator.userLanguage || '').toLowerCase().split('-')[0];
+        if (browserLang && browserLang !== 'zh' && langPrefixes.indexOf(browserLang) !== -1) {
+          localStorage.setItem('preferred_lang', browserLang);
+          sessionStorage.setItem('lang_redirect_done', '1');
+          var target2 = browserLang + '/' + path;
+          window.location.replace('/' + target2);
+        }
+      })();
     </script>
   </head>
   <body class="min-h-screen">

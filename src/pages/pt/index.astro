@@ -1,0 +1,64 @@
+---
+import Layout from '../../layouts/Layout.astro';
+import Sidebar from '../../components/Sidebar.astro';
+import NicheCard from '../../components/NicheCard.astro';
+import Footer from '../../components/Footer.astro';
+import { getCollection } from 'astro:content';
+
+const niches = (await getCollection('niches-pt'))
+  .sort((a, b) => (a.data.order ?? 99) - (b.data.order ?? 99));
+---
+
+<Layout title="Guia de Crescimento - Estratégias de Nicho" description="Estratégias de crescimento por nicho — posicionamento, planejamento de conteúdo, crescimento de seguidores e monetização. 16 nichos cobrindo tech, IA, beleza, fitness e mais." lang="pt" canonical="https://qihao.wolegequ.top/pt/">
+  <div class="flex min-h-screen">
+    <Sidebar niches={niches} lang="pt" />
+
+    <main class="lg:ml-64 flex-1 min-h-screen">
+      <section class="max-w-5xl mx-auto px-6 lg:px-8 py-16 lg:py-24">
+        <h2 class="text-3xl lg:text-4xl font-bold text-[var(--color-text-primary)] mb-4">Do Zero ao Um — Metodologia de Crescimento</h2>
+        <p class="text-lg text-[var(--color-text-secondary)] max-w-2xl mb-6">
+          Estratégias de crescimento por nicho — posicionamento, planejamento de conteúdo, crescimento de seguidores e monetização. Escolha um nicho e comece sua jornada de criador.
+        </p>
+        <div class="flex flex-wrap gap-3">
+          <span class="px-3 py-1 rounded-full bg-[var(--color-accent-subtle)] text-[var(--color-accent)] text-xs font-medium">{niches.length} Nichos</span>
+          <span class="px-3 py-1 rounded-full bg-[var(--color-accent-subtle)] text-[var(--color-accent)] text-xs font-medium">Testado</span>
+          <span class="px-3 py-1 rounded-full bg-[var(--color-accent-subtle)] text-[var(--color-accent)] text-xs font-medium">Atualizado semanalmente</span>
+        </div>
+      </section>
+
+      <section class="max-w-5xl mx-auto px-6 lg:px-8 pb-10">
+        <div class="rounded-xl border border-[var(--color-accent)] bg-[var(--color-accent-subtle)] p-6 lg:p-8">
+          <div class="flex flex-col md:flex-row items-center gap-4 mb-4">
+            <span class="text-4xl">🚀</span>
+            <div class="flex-1">
+              <h3 class="text-lg font-bold text-[var(--color-accent)]">Kit de Crescimento</h3>
+              <p class="text-sm text-[var(--color-text-secondary)] mt-1">Obtenha a metodologia completa de crescimento — posicionamento, planejamento, crescimento de seguidores e estratégias de monetização.</p>
+            </div>
+            <a href="https://github.com/modayishujia/wolegequ.skill" target="_blank" rel="noopener noreferrer" class="px-5 py-2 rounded-lg bg-[var(--color-accent)] text-white text-sm font-medium hover:bg-[var(--color-accent-hover)] transition-colors">
+              Saiba mais
+            </a>
+          </div>
+          <div class="bg-[var(--color-bg-primary)] rounded-lg p-4 font-mono text-sm">
+            <p class="text-[var(--color-text-secondary)] mb-2"># Copie este prompt para a IA para instalar o kit de crescimento</p>
+            <code class="text-[var(--color-accent)]">Por favor, instale esta skill: https://github.com/modayishujia/wolegequ.skill</code>
+          </div>
+        </div>
+      </section>
+
+      <div class="max-w-5xl mx-auto px-6 lg:px-8 pb-6">
+        <ins class="adsbygoogle" style="display:block" data-ad-client="ca-pub-6979809011861753" data-ad-slot="auto" data-ad-format="horizontal" data-full-width-responsive="true"></ins>
+        <script>(adsbygoogle = window.adsbygoogle || []).push({});</script>
+      </div>
+
+      <section class="max-w-5xl mx-auto px-6 lg:px-8 pb-16">
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+          {niches.map((niche) => (
+            <NicheCard title={niche.data.title} icon={niche.data.icon} description={niche.data.description} slug={niche.id} lang="pt" />
+          ))}
+        </div>
+      </section>
+
+      <Footer lang="pt" />
+    </main>
+  </div>
+</Layout>

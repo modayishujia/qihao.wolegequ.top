@@ -5,21 +5,32 @@ import LangToggle from './LangToggle.astro';
 interface Props {
   niches: Array<{ id: string; data: { title: string; icon: string; order?: number } }>;
   currentSlug?: string | null;
-  lang?: 'zh' | 'en';
+  lang?: string;
 }
 
 const { niches, currentSlug = null, lang = 'zh' } = Astro.props;
-const homeHref = lang === 'en' ? '/en/' : '/';
+
+const titles: Record<string, { site: string; desc: string; home: string; updated: string }> = {
+  zh: { site: '起号指南', desc: '各赛道起号逻辑与运营策略', home: '首页', updated: '持续更新中...' },
+  en: { site: 'Account Growth Guide', desc: 'Niche strategies & growth tactics', home: 'Home', updated: 'Updated weekly...' },
+  ja: { site: 'アカウント成長ガイド', desc: 'ニッチ戦略と成長テクニック', home: 'ホーム', updated: '毎週更新中...' },
+  de: { site: 'Konto-Wachstumsleitfaden', desc: 'Nischenstrategien & Wachstumstechniken', home: 'Startseite', updated: 'Wöchentlich aktualisiert...' },
+  pt: { site: 'Guia de Crescimento', desc: 'Estratégias de nicho e táticas de crescimento', home: 'Início', updated: 'Atualizado semanalmente...' },
+  fr: { site: 'Guide de Croissance', desc: 'Stratégies de niche et techniques de croissance', home: 'Accueil', updated: 'Mis à jour chaque semaine...' },
+};
+
+const t = titles[lang] || titles.zh;
+const homeHref = lang === 'zh' ? '/' : `/${lang}/`;
 ---
 
 <aside class="fixed left-0 top-0 h-screen w-64 border-r border-[var(--color-border)] bg-[var(--color-sidebar-bg)] flex flex-col z-30 -translate-x-full lg:translate-x-0 transition-transform duration-200">
   <div class="p-6 border-b border-[var(--color-border)]">
     <a href={homeHref} class="block">
       <h1 class="text-xl font-bold text-[var(--color-text-primary)]">
-        {lang === 'zh' ? '起号指南' : 'Account Growth Guide'}
+        {t.site}
       </h1>
       <p class="text-xs text-[var(--color-text-secondary)] mt-1">
-        {lang === 'zh' ? '各赛道起号逻辑与运营策略' : 'Niche strategies & growth tactics'}
+        {t.desc}
       </p>
     </a>
   </div>
@@ -27,11 +38,11 @@ const homeHref = lang === 'en' ? '/en/' : '/';
   <nav class="flex-1 overflow-y-auto p-4 space-y-1">
     <a href={homeHref} class:list={['sidebar-link flex items-center gap-3 px-4 py-3 rounded-lg border border-transparent text-sm', { active: currentSlug === null }]}>
       <span class="text-lg">🏠</span>
-      <span>{lang === 'zh' ? '首页' : 'Home'}</span>
+      <span>{t.home}</span>
     </a>
     {niches.map((niche) => (
       <a
-        href={lang === 'en' ? `/en/${niche.id}` : `/${niche.id}`}
+        href={lang === 'zh' ? `/${niche.id}` : `/${lang}/${niche.id}`}
         class:list={['sidebar-link flex items-center gap-3 px-4 py-3 rounded-lg border border-transparent text-sm', { active: currentSlug === niche.id }]}
       >
         <span class="text-lg">{niche.data.icon}</span>
@@ -46,7 +57,7 @@ const homeHref = lang === 'en' ? '/en/' : '/';
       <LangToggle lang={lang} currentSlug={currentSlug} />
     </div>
     <p class="text-xs text-[var(--color-text-tertiary)] text-center">
-      {lang === 'zh' ? '持续更新中...' : 'Updated weekly...'}
+      {t.updated}
     </p>
   </div>
 </aside>
@@ -55,7 +66,7 @@ const homeHref = lang === 'en' ? '/en/' : '/';
 
 <div class="lg:hidden fixed top-0 left-0 right-0 z-10 bg-[var(--color-bg-primary)] border-b border-[var(--color-border)] p-4 flex items-center justify-between">
   <a href={homeHref} class="text-lg font-bold text-[var(--color-text-primary)]">
-    {lang === 'zh' ? '起号指南' : 'Account Growth Guide'}
+    {t.site}
   </a>
   <button id="menu-toggle" class="text-[var(--color-text-secondary)] hover:text-[var(--color-text-primary)]">
     <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">

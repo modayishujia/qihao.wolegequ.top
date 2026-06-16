@@ -1,19 +1,31 @@
 ---
 interface Props {
-  lang: 'zh' | 'en';
+  lang: string;
 }
 
 const { lang } = Astro.props;
+
+const texts: Record<string, { copyright: string; qr: string; follow: string }> = {
+  zh: { copyright: '© 2025 起号指南 · 持续更新各赛道运营方法论', qr: '扫码关注', follow: '关注 @莫说闲话' },
+  en: { copyright: '© 2025 Account Growth Guide · Niche growth strategies', qr: 'Follow us', follow: 'Follow @莫说闲话 on X' },
+  ja: { copyright: '© 2025 アカウント成長ガイド · ニッチ戦略', qr: 'フォローする', follow: '@莫说闲话 をフォロー' },
+  de: { copyright: '© 2025 Konto-Wachstumsleitfaden · Nischenstrategien', qr: 'Folgen', follow: '@莫说闲话 auf X folgen' },
+  pt: { copyright: '© 2025 Guia de Crescimento · Estratégias de nicho', qr: 'Siga-nos', follow: 'Siga @莫说闲话 no X' },
+  fr: { copyright: '© 2025 Guide de Croissance · Stratégies de niche', qr: 'Suivez-nous', follow: 'Suivez @莫说闲话 sur X' },
+};
+
+const t = texts[lang] || texts.zh;
+const isZh = lang === 'zh';
 ---
 
 <footer class="max-w-4xl mx-auto px-8 py-12 text-center">
   <p class="text-sm text-[var(--color-text-secondary)]">
-    {lang === 'zh' ? '© 2025 起号指南 · 持续更新各赛道运营方法论' : '© 2025 Account Growth Guide · Niche growth strategies'}
+    {t.copyright}
   </p>
-  {lang === 'zh' ? (
+  {isZh ? (
     <div class="mt-6 flex flex-col items-center gap-3">
-      <img src="/qrcode.png" alt="扫码关注" class="w-64 max-w-full object-contain rounded-lg" style="aspect-ratio: 1710/624;" loading="lazy" />
-      <p class="text-xs text-[var(--color-text-tertiary)]">扫码关注</p>
+      <img src="/qrcode.png" alt={t.qr} class="w-64 max-w-full object-contain rounded-lg" style="aspect-ratio: 1710/624;" loading="lazy" />
+      <p class="text-xs text-[var(--color-text-tertiary)]">{t.qr}</p>
     </div>
   ) : (
     <div class="mt-6 flex flex-col items-center gap-2">
@@ -21,7 +33,7 @@ const { lang } = Astro.props;
         <svg class="w-4 h-4" viewBox="0 0 24 24" fill="currentColor">
           <path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/>
         </svg>
-        Follow @莫说闲话 on X
+        {t.follow}
       </a>
       <a href="https://x.com/iGaves" target="_blank" rel="noopener noreferrer" class="text-xs text-[var(--color-text-tertiary)] hover:text-[var(--color-text-secondary)] transition-colors">
         https://x.com/iGaves
