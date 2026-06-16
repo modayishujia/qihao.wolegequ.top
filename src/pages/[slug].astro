@@ -2,6 +2,7 @@
 import Layout from '../layouts/Layout.astro';
 import Sidebar from '../components/Sidebar.astro';
 import Footer from '../components/Footer.astro';
+import PromptTool from '../components/PromptTool.astro';
 import { getCollection, render } from 'astro:content';
 
 export async function getStaticPaths() {
@@ -37,6 +38,8 @@ const description = niche.data.description || `${niche.data.title}赛道起号�
         <article class="prose max-w-none">
           <Content />
         </article>
+
+        <PromptTool nicheTitle={niche.data.title} slug={niche.id} />
       </div>
 
       <div class="max-w-4xl mx-auto px-6 lg:px-8 py-6">
