@@ -35,11 +35,12 @@ const description = niche.data.description || `${niche.data.title}赛道起号�
           <span class="text-3xl">{niche.data.icon}</span>
           <h1 class="text-2xl lg:text-3xl font-bold text-[var(--color-text-primary)]">{niche.data.title}</h1>
         </div>
-        <article class="prose max-w-none">
-          <Content />
-        </article>
 
         <PromptTool nicheTitle={niche.data.title} slug={niche.id} />
+
+        <article class="prose max-w-none mt-10">
+          <Content />
+        </article>
       </div>
 
       <div class="max-w-4xl mx-auto px-6 lg:px-8 py-6">
